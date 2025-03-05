@@ -5,6 +5,7 @@ import auth.entities.Role;
 import org.hibernate.Session;
 
 import java.util.List;
+import java.util.Optional;
 
 public class RoleDAO extends SimpleDAO<Role>{
 
@@ -33,6 +34,18 @@ public class RoleDAO extends SimpleDAO<Role>{
         Session session = ConfigureSessionHibernate.getSession();
         try {
             return session.createQuery("FROM Role", Role.class).list();
+        } finally {
+            session.close();
+        }
+    }
+
+    public Optional<Role> findByName(String name) {
+        Session session = ConfigureSessionHibernate.getSession();
+        try {
+            Role role = session.createQuery("FROM Role WHERE name = :name", Role.class)
+                    .setParameter("name", name)
+                    .uniqueResult();
+            return Optional.ofNullable(role);
         } finally {
             session.close();
         }
