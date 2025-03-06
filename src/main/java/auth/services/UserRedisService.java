@@ -1,7 +1,6 @@
 package auth.services;
 
 import auth.dto.UserRedisDTO;
-import auth.repositories.UserRedisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

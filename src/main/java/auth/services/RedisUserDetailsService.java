@@ -1,4 +1,6 @@
-package auth.repositories;
+package auth.services;
 
-public class RedisUserDetailsService {
+import auth.daos.UserRedisDAO;
+
+public class RedisUserDetailsService implements UserRedisDAO {
 }

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class JwtService {
 
     @Autowired
-    protected UserRedisRepository userRedisRepository;
+    protected UserRedisDAO userRedisRepository;
     @Autowired
     protected RoleDAO roleDAO;
     private final SecretKey secretKey;

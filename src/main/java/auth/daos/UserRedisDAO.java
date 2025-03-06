@@ -1,7 +1,7 @@
-package auth.repositories;
+package auth.daos;
 
 import auth.dto.UserRedisDTO;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRedisRepository extends CrudRepository<UserRedisDTO, Long> {
+public interface UserRedisDAO extends CrudRepository<UserRedisDTO, Long> {
 }

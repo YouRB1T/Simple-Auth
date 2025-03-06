@@ -1,2 +1,4 @@
-package auth.repositories;public class UserRedisRepository {
+package auth.repositories;
+
+public class UserRedisRepository {
 }
