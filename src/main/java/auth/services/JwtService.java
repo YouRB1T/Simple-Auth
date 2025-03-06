@@ -50,7 +50,6 @@ public class JwtService {
             Optional<UserRedisDTO> redisData = userRedisRepository.findById(userId);
 
             if (isTokenExpired(token)) {
-                // Очистка устаревшего токена из Redis
                 userRedisRepository.deleteById(userId);
                 return false;
             }

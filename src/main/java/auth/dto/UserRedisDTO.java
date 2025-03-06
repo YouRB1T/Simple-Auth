@@ -12,7 +12,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("User")
+@RedisHash("user")
 public class UserRedisDTO {
     @Id
     private Long idUser;
