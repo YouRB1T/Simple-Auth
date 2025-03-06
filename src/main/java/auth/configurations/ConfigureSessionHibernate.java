@@ -6,12 +6,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.PostgreSQLDialect;
+import org.springframework.context.annotation.Configuration;
 
 import static org.hibernate.cfg.JdbcSettings.*;
 import static org.hibernate.cfg.SchemaToolingSettings.HBM2DDL_AUTO;
 
+@Configuration
 public class ConfigureSessionHibernate {
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
