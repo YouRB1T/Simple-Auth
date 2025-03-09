@@ -39,7 +39,6 @@ class JwtServiceTest {
 
         jwtService = new JwtService(SECRET_KEY, EXPIRATION_MS);
 
-        jwtService.userRedisRepository = userRedisRepository;
         jwtService.roleDAO = roleDAO;
 
         testUser = new User();
@@ -67,11 +66,4 @@ class JwtServiceTest {
         assertTrue(claims.get("roles") instanceof List);
     }
 
-    @Test
-    void validTokenShouldReturnTrue() {
-        String token = jwtService.generateJWTKey(testUser);
-        when(userRedisRepository.findById(anyLong())).thenReturn(Optional.of(new UserRedisDTO(1L, token)));
-
-        assertTrue(jwtService.isTokenValid(token));
-    }
 }

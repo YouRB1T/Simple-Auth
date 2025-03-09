@@ -3,10 +3,12 @@ package auth.daos;
 import auth.configurations.ConfigureSessionHibernate;
 import auth.entities.Role;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class RoleDAO extends SimpleDAO<Role>{
 
     public void createRole(Role role) {

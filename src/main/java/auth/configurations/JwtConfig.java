@@ -10,14 +10,14 @@ import javax.crypto.SecretKey;
 public class JwtConfig {
 
     @Value("${jwt.secret}")
-    private String secret;
+    private String secretKey;
 
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
 
     @Bean
     public SecretKey secretKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     @Bean

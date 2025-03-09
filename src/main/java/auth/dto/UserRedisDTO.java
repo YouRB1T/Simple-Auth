@@ -16,6 +16,8 @@ import org.springframework.data.redis.core.RedisHash;
 public class UserRedisDTO {
     @Id
     private Long idUser;
+    @JsonProperty("user_name")
+    private String userName;
     @JsonProperty("JWT")
     private String JWT;
 }
