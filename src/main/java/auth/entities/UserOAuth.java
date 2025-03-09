@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuth {
+public class UserOAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -3,7 +3,7 @@ package auth.daos;
 import auth.configurations.ConfigureSessionHibernate;
 import auth.entities.Role;
 import auth.entities.User;
-import auth.entities.UserAuth;
+import auth.entities.UserOAuth;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -102,18 +102,6 @@ public class UserDAO extends SimpleDAO<User>{
             } else {
                 return Optional.empty();
             }
-        } finally {
-            session.close();
-        }
-    }
-
-    public List<UserAuth> getAllUserAuthMethods(Long userId) {
-        Session session = ConfigureSessionHibernate.getSession();
-        try {
-            Query<UserAuth> query = session.createQuery(
-                    "FROM UserAuth WHERE user.idUser = :userId", UserAuth.class);
-            query.setParameter("userId", userId);
-            return query.list();
         } finally {
             session.close();
         }

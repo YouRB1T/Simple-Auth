@@ -36,7 +36,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout.permitAll()) // Разрешить выход
                 .httpBasic(httpBasic -> httpBasic.disable()) // Отключить базовую аутентификацию
-                .csrf(csrf -> csrf.disable()) // Отключить CSRF-защиту (для тестирования)
+                // Отключить CSRF-защиту (для тестирования)
                 .build();
     }
 

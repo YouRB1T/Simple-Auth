@@ -2,39 +2,39 @@ package auth.daos;
 
 import auth.configurations.ConfigureSessionHibernate;
 import auth.entities.AuthProvider;
-import auth.entities.UserAuth;
+import auth.entities.UserOAuth;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Optional;
 
-public class UserAuthDAO extends SimpleDAO<UserAuth>{
-    public void createUserAuth(UserAuth userAuth) {
+public class UserOAuthDAO extends SimpleDAO<UserOAuth>{
+    public void createUserAuth(UserOAuth userAuth) {
         create(userAuth);
     }
 
-    public UserAuth getUserAuthById(Integer id) {
+    public UserOAuth getUserAuthById(Integer id) {
         return get(id);
     }
 
-    public void updateUserAuth(UserAuth userAuth) {
+    public void updateUserAuth(UserOAuth userAuth) {
         update(userAuth);
     }
 
-    public UserAuth deleteUserAuth(Integer id) {
+    public UserOAuth deleteUserAuth(Integer id) {
         return delete(id);
     }
     @Override
-    public Class<UserAuth> getEntityClass() {
-        return UserAuth.class;
+    public Class<UserOAuth> getEntityClass() {
+        return UserOAuth.class;
     }
 
-    public Optional<UserAuth> findUserAuthByUserIdAndProviderId(Long userId, Integer providerId) {
+    public Optional<UserOAuth> findUserAuthByUserIdAndProviderId(Long userId, Integer providerId) {
         Session session = ConfigureSessionHibernate.getSession();
         try {
-            Query<UserAuth> query = session.createQuery(
-                    "FROM UserAuth WHERE user.idUser = :userId AND provider.id = :providerId", UserAuth.class);
+            Query<UserOAuth> query = session.createQuery(
+                    "FROM UserAuth WHERE user.idUser = :userId AND provider.id = :providerId", UserOAuth.class);
             query.setParameter("userId", userId);
             query.setParameter("providerId", providerId);
             return query.uniqueResultOptional();
@@ -43,11 +43,11 @@ public class UserAuthDAO extends SimpleDAO<UserAuth>{
         }
     }
 
-    public List<UserAuth> getAllUserAuthMethods(Long userId) {
+    public List<UserOAuth> getAllUserAuthMethods(Long userId) {
         Session session = ConfigureSessionHibernate.getSession();
         try {
-            Query<UserAuth> query = session.createQuery(
-                    "FROM UserAuth WHERE user.idUser = :userId", UserAuth.class);
+            Query<UserOAuth> query = session.createQuery(
+                    "FROM UserAuth WHERE user.idUser = :userId", UserOAuth.class);
             query.setParameter("userId", userId);
             return query.list();
         } finally {
