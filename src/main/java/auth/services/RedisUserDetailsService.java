@@ -43,9 +43,6 @@ public class RedisUserDetailsService implements UserDetailsService {
         }
     }
 
-    public long getUserID(String token) {
-        return Long.parseLong(tokenService.verifyToken(token).getSubject());
-    }
 
     public Set<Role> getUserRoles(String token) {
         Set<Role> roles = new HashSet<>();
