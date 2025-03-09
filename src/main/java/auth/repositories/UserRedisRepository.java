@@ -1,4 +1,5 @@
 package auth.repositories;
+import auth.dto.UserRedisDTO;
 import auth.entities.User;
 import auth.services.JwtService;
 import auth.services.TokenService;
@@ -58,10 +59,20 @@ public class UserRedisRepository {
         return Boolean.TRUE.equals(redisTemplate.delete(key));
     }
 
-    public List<String> getAllUsers() {
+    public List<UserRedisDTO> getAllUsers() {
         return redisTemplate.keys(REDIS_KEY_PREFIX + "*")
                 .stream()
-                .map(key -> tokenService.extractUserId(redisTemplate.opsForValue().get(key)).toString())
+                .map(key -> {
+                    String jwt = redisTemplate.opsForValue().get(key);
+                    Long idUser = tokenService.extractUserId(jwt);
+
+                    UserRedisDTO userRedisDTO = new UserRedisDTO();
+                    userRedisDTO.setIdUser(idUser);
+                    userRedisDTO.setUserName(key.replace(REDIS_KEY_PREFIX, ""));
+                    userRedisDTO.setJWT(jwt);
+
+                    return userRedisDTO;
+                })
                 .collect(Collectors.toList());
     }
 }
