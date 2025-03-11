@@ -20,18 +20,13 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "role", unique = true, updatable = false)
-    private String role;
+    @Column(name = "name", unique = true, updatable = false)
+    private String name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
-    public Role(Integer id, String role) {
-        this.id = id;
-        this.role = role;
-    }
-
     public Role(String role) {
-        this.role = role;
+        this.name = role;
     }
 }
