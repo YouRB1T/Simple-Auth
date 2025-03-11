@@ -1,6 +1,5 @@
 package auth.entities;
 
-import auth.daos.UserOAuthDAO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

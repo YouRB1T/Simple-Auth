@@ -1,6 +1,5 @@
 package auth.services;
 
-import auth.daos.RoleDAO;
 import auth.entities.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Set;
 
 @Getter
 @Service

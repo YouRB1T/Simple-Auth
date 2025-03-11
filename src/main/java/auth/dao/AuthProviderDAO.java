@@ -1,14 +1,12 @@
-package auth.daos;
+package auth.dao;
 
 import auth.configurations.ConfigureSessionHibernate;
 import auth.entities.AuthProvider;
-import auth.entities.Role;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisHash;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

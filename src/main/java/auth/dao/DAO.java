@@ -1,4 +1,4 @@
-package auth.daos;
+package auth.dao;
 
 public interface DAO<E> {
     void create(E entity);

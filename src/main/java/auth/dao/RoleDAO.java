@@ -1,4 +1,4 @@
-package auth.daos;
+package auth.dao;
 
 import auth.configurations.ConfigureSessionHibernate;
 import auth.entities.Role;

@@ -1,8 +1,7 @@
 package auth.services;
 
-import auth.daos.RoleDAO;
+import auth.dao.RoleDAO;
 import auth.entities.Role;
-import auth.entities.User;
 import auth.repositories.UserRedisRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;

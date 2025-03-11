@@ -1,8 +1,8 @@
 package auth.repositories;
 
-import auth.daos.AuthProviderDAO;
-import auth.daos.UserDAO;
-import auth.daos.UserOAuthDAO;
+import auth.dao.AuthProviderDAO;
+import auth.dao.UserDAO;
+import auth.dao.UserOAuthDAO;
 import auth.dto.LocalUserRegistrationDTO;
 import auth.dto.OAuthUserRegistrationDTO;
 import auth.entities.AuthProvider;

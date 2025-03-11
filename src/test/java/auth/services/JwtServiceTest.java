@@ -1,6 +1,5 @@
 package auth.services;
-import auth.daos.RoleDAO;
-import auth.dto.UserRedisDTO;
+import auth.dao.RoleDAO;
 import auth.entities.Role;
 import auth.entities.User;
 import auth.repositories.UserRedisRepository;
@@ -16,8 +15,6 @@ import javax.crypto.SecretKey;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 
 class JwtServiceTest {
 
