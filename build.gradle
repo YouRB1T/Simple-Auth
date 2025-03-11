@@ -39,8 +39,7 @@ dependencies {
 
     //LOGGING
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.16'
-
-
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
 
 
 }
