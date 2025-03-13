@@ -1,5 +1,9 @@
 package auth.configurations;
 
+import auth.entities.AuthProvider;
+import auth.entities.Role;
+import auth.entities.User;
+import auth.entities.UserOAuth;
 import jakarta.persistence.Entity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,7 +32,10 @@ public class ConfigureSessionHibernate {
                 .build();
 
         return new MetadataSources(registry)
-                .addAnnotatedClass(Entity.class)
+                .addAnnotatedClass(User.class) // Регистрируем сущность User
+                .addAnnotatedClass(AuthProvider.class) // Регистрируем сущность AuthProvider
+                .addAnnotatedClass(Role.class) // Регистрируем сущность Role
+                .addAnnotatedClass(UserOAuth.class) // Регистрируем сущность UserOAuth
                 .buildMetadata()
                 .getSessionFactoryBuilder()
                 .build();

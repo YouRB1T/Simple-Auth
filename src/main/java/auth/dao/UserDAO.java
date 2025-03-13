@@ -113,7 +113,7 @@ public class UserDAO extends SimpleDAO<User>{
             Optional<User> userByEmail = queryEmail.uniqueResultOptional();
 
             Query<User> queryNumber = session.createQuery(
-                    "FROM User WHERE phoneNumber = :number", User.class);
+                    "FROM User WHERE number = :number", User.class);
             queryNumber.setParameter("number", number);
             Optional<User> userByNumber = queryNumber.uniqueResultOptional();
 

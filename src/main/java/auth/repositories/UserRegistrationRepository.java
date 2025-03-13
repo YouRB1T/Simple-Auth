@@ -1,6 +1,7 @@
 package auth.repositories;
 
 import auth.dao.AuthProviderDAO;
+import auth.dao.RoleDAO;
 import auth.dao.UserDAO;
 import auth.dao.UserOAuthDAO;
 import auth.dto.LocalUserRegistrationDTO;
@@ -16,14 +17,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Repository
 public class UserRegistrationRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRegistrationRepository.class);
 
+    private Random random = new Random();
+
     @Autowired
     private UserDAO userDAO;
+
+    @Autowired
+    private RoleDAO roleDAO;
 
     @Autowired
     private UserOAuthDAO userOAuthDAO;
@@ -49,14 +56,12 @@ public class UserRegistrationRepository {
         newUser.setUsername(registrationDTO.getUsername());
         newUser.setPassword(passwordEncoder.encode(registrationDTO.getPassword()));
         newUser.setNumber(registrationDTO.getNumber());
-
-        Role userRole = new Role(1);
-        newUser.getRoles().add(userRole);
-
         userDAO.createUser(newUser);
         logger.info("Local user created successfully: {}", newUser.getUsername());
 
-        userDAO.addRoleToUser(newUser.getIdUser().intValue(), 1);
+        Long userId = newUser.getIdUser();
+
+        userDAO.addRoleToUser(userId.intValue(), 1);
         logger.info("Role USER added successfully to user: {}", newUser.getUsername());
 
         return newUser;

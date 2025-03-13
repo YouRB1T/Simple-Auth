@@ -14,6 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -30,10 +35,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable()) // Отключаем CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Включаем CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll() // Разрешить доступ к публичным ресурсам
-                        .requestMatchers("/login").permitAll() // Разрешить доступ к странице входа
-                        .requestMatchers("/secure").hasRole("USER") // Защитить страницу /secure
+                        .requestMatchers("/register/**").permitAll() // Разрешить доступ к регистрации
+                        .requestMatchers("/login").permitAll() // Разрешить доступ к входу
                         .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
                 )
                 .sessionManagement(session -> session
@@ -61,5 +66,23 @@ public class SecurityConfig {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .authenticationProvider(authProvider)
                 .build();
+    }
+
+    /**
+     * Настройка CORS.
+     *
+     * @return Конфигурация CORS.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*")); // Разрешить все источники
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Разрешенные методы
+        configuration.setAllowedHeaders(Arrays.asList("*")); // Разрешить все заголовки
+        configuration.setExposedHeaders(Arrays.asList("Authorization")); // Открыть заголовок Authorization
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Применить ко всем эндпоинтам
+        return source;
     }
 }
