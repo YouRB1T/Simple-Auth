@@ -26,7 +26,7 @@ public class TokenService {
     private final SecretKey secretKey;
     private final long expirationMs;
 
-    private boolean isTokenSignatureValid(String token) {
+    public boolean isTokenSignatureValid(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)

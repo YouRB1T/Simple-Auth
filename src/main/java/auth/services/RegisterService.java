@@ -3,6 +3,7 @@ package auth.services;
 import auth.dto.LocalUserRegistrationDTO;
 import auth.dto.OAuthUserRegistrationDTO;
 import auth.entities.User;
+import auth.entities.UserOAuth;
 import auth.repositories.UserRegistrationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,4 +27,5 @@ public class RegisterService {
         logger.debug("Attempting to register OAuth user with email: {}", registrationDTO.getEmail());
         return registrationRepository.registerOAuthUser(registrationDTO);
     }
+
 }

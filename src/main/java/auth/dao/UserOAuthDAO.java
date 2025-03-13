@@ -2,8 +2,10 @@ package auth.dao;
 
 import auth.configurations.ConfigureSessionHibernate;
 import auth.entities.AuthProvider;
+import auth.entities.User;
 import auth.entities.UserOAuth;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +84,39 @@ public class UserOAuthDAO extends SimpleDAO<UserOAuth>{
         } finally {
             session.close();
             logger.debug("Session closed after getAllProviders operation");
+        }
+    }
+
+    public void linkOAuthUserToMainUser(Integer oauthUserId, Integer mainUserId) {
+        Session session = ConfigureSessionHibernate.getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            UserOAuth oauthUser = session.get(UserOAuth.class, oauthUserId);
+            User mainUser = session.get(User.class, mainUserId);
+            if (oauthUser != null && mainUser != null) {
+                oauthUser.setUser(mainUser);
+                session.update(oauthUser);
+                transaction.commit();
+            }
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    public Optional<UserOAuth> findByProviderAndProviderId(String providerName, String providerId) {
+        Session session = ConfigureSessionHibernate.getSession();
+        try {
+            Query<UserOAuth> query = session.createQuery(
+                    "FROM UserOAuth WHERE authProvider.name = :providerName AND providerUserId = :providerId", UserOAuth.class);
+            query.setParameter("providerName", providerName);
+            query.setParameter("providerId", providerId);
+            return query.uniqueResultOptional();
+        } finally {
+            session.close();
         }
     }
 }

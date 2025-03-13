@@ -1,9 +1,9 @@
 package auth.services;
 
-import auth.dto.UserRedisDTO;
 import auth.entities.User;
 import auth.repositories.UserLoginRepository;
-import auth.repositories.UserRedisRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,11 @@ import java.util.Optional;
 
 @Service
 public class LoginService {
-    @Autowired
-    private UserLoginRepository userLoginRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
     @Autowired
-    private UserRedisRepository userRedisRepository;
+    private UserLoginRepository userLoginRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -25,37 +25,84 @@ public class LoginService {
     private JwtService jwtService;
 
     /**
-     * Аутентифицировать пользователя по имени пользователя или email и паролю.
+     * Аутентификация пользователя.
      *
-     * @param username Имя пользователя или email.
-     * @param password Пароль пользователя.
-     * @return Объект UserRedisDTO с данными пользователя и JWT-токеном, если аутентификация успешна, иначе null.
+     * @param username Имя пользователя.
+     * @param password Пароль.
+     * @return JWT-токен, если аутентификация успешна.
+     * @throws RuntimeException Если аутентификация не удалась.
      */
-    public UserRedisDTO authenticateUser(String username, String password) {
+    public String authenticateUser(String username, String password) {
+        logger.debug("Attempting to authenticate user: {}", username);
+
         Optional<User> userOptional = userLoginRepository.findByUsernameOrEmail(username);
 
-        if (userOptional.isPresent()) {
+        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             User user = userOptional.get();
 
-            // Проверяем, совпадает ли пароль
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                // Генерируем JWT-токен
-                String token = jwtService.generateJWTKey(user);
-
-                // Создаем объект UserRedisDTO
-                UserRedisDTO userRedisDTO = new UserRedisDTO();
-                userRedisDTO.setIdUser(user.getIdUser());
-                userRedisDTO.setUserName(user.getUsername());
-                userRedisDTO.setJWT(token);
-
-                // Сохраняем токен в Redis
-                userRedisRepository.addUser(user, passwordEncoder);
-
-                return userRedisDTO; // Возвращаем данные пользователя и токен
+            // Проверяем, есть ли пользователь в Redis
+            if (!userLoginRepository.isUserInRedis(username)) {
+                // Добавляем пользователя в Redis
+                userLoginRepository.addUserToRedis(user, passwordEncoder);
+                logger.info("User {} added to Redis", username);
             }
+
+            // Генерация JWT-токена
+            String jwtToken = jwtService.generateJWTKey(user);
+            logger.info("User {} authenticated successfully", username);
+            return jwtToken;
+        } else {
+            logger.warn("Authentication failed for user: {}", username);
+            throw new RuntimeException("Invalid credentials");
+        }
+    }
+
+    /**
+     * Удалить пользователя из Redis (логаут).
+     *
+     * @param username Имя пользователя.
+     * @return true, если пользователь удален, иначе false.
+     */
+    public boolean logoutUser(String username) {
+        logger.debug("Attempting to logout user: {}", username);
+        boolean isDeleted = userLoginRepository.deleteUserFromRedis(username);
+
+        if (isDeleted) {
+            logger.info("User {} logged out successfully", username);
+        } else {
+            logger.warn("User {} not found in Redis", username);
         }
 
-        return null; // Аутентификация не удалась
+        return isDeleted;
+    }
+
+    /**
+     * Получить JWT-токен пользователя из Redis.
+     *
+     * @param username Имя пользователя.
+     * @return JWT-токен, если пользователь найден, иначе null.
+     */
+    public String getUserToken(String username) {
+        logger.debug("Attempting to get token for user: {}", username);
+        String token = userLoginRepository.getTokenFromRedis(username);
+
+        if (token != null) {
+            logger.info("Token found for user: {}", username);
+        } else {
+            logger.warn("No token found for user: {}", username);
+        }
+
+        return token;
+    }
+
+    /**
+     * Обновить данные пользователя в Redis.
+     *
+     * @param user Пользователь.
+     */
+    public void updateUserInRedis(User user) {
+        logger.debug("Attempting to update user in Redis: {}", user.getUsername());
+        userLoginRepository.updateUserInRedis(user, passwordEncoder);
+        logger.info("User {} updated in Redis", user.getUsername());
     }
 }
-

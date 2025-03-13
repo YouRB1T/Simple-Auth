@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -137,6 +140,30 @@ public class UserDAO extends SimpleDAO<User>{
         } finally {
             session.close();
             logger.debug("Session closed after findByUsernameOrEmail operation for email: {} and number: {}", email, number);
+        }
+    }
+
+    public List<Role> getRolesByUserId(Integer userId) {
+        Session session = ConfigureSessionHibernate.getSession();
+        try {
+            User user = session.get(User.class, userId);
+            if (user != null) {
+                return new ArrayList<>(user.getRoles());
+            }
+            return Collections.emptyList();
+        } finally {
+            session.close();
+        }
+    }
+
+    public boolean hasRole(Integer userId, Integer roleId) {
+        Session session = ConfigureSessionHibernate.getSession();
+        try {
+            User user = session.get(User.class, userId);
+            Role role = session.get(Role.class, roleId);
+            return user != null && role != null && user.getRoles().contains(role);
+        } finally {
+            session.close();
         }
     }
 }

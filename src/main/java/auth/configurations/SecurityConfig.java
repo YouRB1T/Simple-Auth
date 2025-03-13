@@ -1,5 +1,6 @@
 package auth.configurations;
 
+import auth.filters.JwtRequestFilter;
 import auth.services.RedisUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,35 +9,38 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final RedisUserDetailsService userDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    public SecurityConfig(RedisUserDetailsService userDetailsService) {
+    public SecurityConfig(RedisUserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .csrf(csrf -> csrf.disable()) // Отключаем CSRF
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll() // Разрешить доступ к публичным ресурсам
                         .requestMatchers("/login").permitAll() // Разрешить доступ к странице входа
                         .requestMatchers("/secure").hasRole("USER") // Защитить страницу /secure
                         .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
                 )
-                .formLogin(form -> form
-                        .loginPage("/login") // Страница входа
-                        .permitAll()
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Делаем сессию без состояния
                 )
-                .logout(logout -> logout.permitAll()) // Разрешить выход
-                .httpBasic(httpBasic -> httpBasic.disable()) // Отключить базовую аутентификацию
-                // Отключить CSRF-защиту (для тестирования)
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // Добавляем JWT-фильтр
+                .httpBasic(httpBasic -> httpBasic.disable()) // Отключаем базовую аутентификацию
                 .build();
     }
 
