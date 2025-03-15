@@ -14,12 +14,6 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    /**
-     * Аутентификация пользователя.
-     *
-     * @param userLoginDTO Данные для входа.
-     * @return JWT-токен, если аутентификация успешна.
-     */
     @PostMapping
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
         try {
@@ -30,12 +24,6 @@ public class LoginController {
         }
     }
 
-    /**
-     * Выход пользователя из системы.
-     *
-     * @param username Имя пользователя.
-     * @return Сообщение об успешном выходе или ошибке.
-     */
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestParam String username) {
         boolean isLoggedOut = loginService.logoutUser(username);
@@ -46,12 +34,6 @@ public class LoginController {
         }
     }
 
-    /**
-     * Получить JWT-токен пользователя.
-     *
-     * @param username Имя пользователя.
-     * @return JWT-токен, если пользователь найден, иначе сообщение об ошибке.
-     */
     @GetMapping("/token")
     public ResponseEntity<String> getToken(@RequestParam String username) {
         String token = loginService.getUserToken(username);

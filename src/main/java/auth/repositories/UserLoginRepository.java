@@ -20,67 +20,31 @@ public class UserLoginRepository {
     @Autowired
     private UserRedisRepository userRedisRepository;
 
-    /**
-     * Найти пользователя по имени пользователя или email.
-     *
-     * @param username Имя пользователя или email.
-     * @return Optional с пользователем, если найден, иначе пустой Optional.
-     */
-    public Optional<User> findByUsernameOrEmail(String username) {
-        logger.debug("Attempting to find user by username or email: {}", username);
-        return userDAO.findByUsernameOrEmail(username, null);
+    public Optional<User> findByUsernameOrEmail(String email) {
+        logger.debug("Attempting to find user by username or email: {}", email);
+        return userDAO.findByUsernameOrEmail(email, null);
     }
 
-    /**
-     * Проверить, существует ли пользователь в Redis.
-     *
-     * @param username Имя пользователя.
-     * @return true, если пользователь существует в Redis, иначе false.
-     */
     public boolean isUserInRedis(String username) {
         logger.debug("Checking if user exists in Redis: {}", username);
         return userRedisRepository.findTokenByUsername(username) != null;
     }
 
-    /**
-     * Добавить пользователя в Redis.
-     *
-     * @param user Пользователь.
-     * @param passwordEncoder Кодировщик паролей.
-     */
     public void addUserToRedis(User user, PasswordEncoder passwordEncoder) {
         logger.debug("Attempting to add user to Redis: {}", user.getUsername());
         userRedisRepository.addUser(user, passwordEncoder);
     }
 
-    /**
-     * Удалить пользователя из Redis.
-     *
-     * @param username Имя пользователя.
-     * @return true, если пользователь удален, иначе false.
-     */
     public boolean deleteUserFromRedis(String username) {
         logger.debug("Attempting to delete user from Redis: {}", username);
         return userRedisRepository.deleteUserByUsername(username);
     }
 
-    /**
-     * Получить JWT-токен пользователя из Redis.
-     *
-     * @param username Имя пользователя.
-     * @return JWT-токен, если пользователь найден, иначе null.
-     */
     public String getTokenFromRedis(String username) {
         logger.debug("Attempting to get token for user: {}", username);
         return userRedisRepository.findTokenByUsername(username);
     }
 
-    /**
-     * Обновить данные пользователя в Redis.
-     *
-     * @param user Пользователь.
-     * @param passwordEncoder Кодировщик паролей.
-     */
     public void updateUserInRedis(User user, PasswordEncoder passwordEncoder) {
         logger.debug("Attempting to update user in Redis: {}", user.getUsername());
         userRedisRepository.updateUser(user, passwordEncoder);

@@ -24,14 +24,6 @@ public class LoginService {
     @Autowired
     private JwtService jwtService;
 
-    /**
-     * Аутентификация пользователя.
-     *
-     * @param username Имя пользователя.
-     * @param password Пароль.
-     * @return JWT-токен, если аутентификация успешна.
-     * @throws RuntimeException Если аутентификация не удалась.
-     */
     public String authenticateUser(String username, String password) {
         logger.debug("Attempting to authenticate user: {}", username);
 
@@ -40,14 +32,11 @@ public class LoginService {
         if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             User user = userOptional.get();
 
-            // Проверяем, есть ли пользователь в Redis
             if (!userLoginRepository.isUserInRedis(username)) {
-                // Добавляем пользователя в Redis
                 userLoginRepository.addUserToRedis(user, passwordEncoder);
                 logger.info("User {} added to Redis", username);
             }
 
-            // Генерация JWT-токена
             String jwtToken = jwtService.generateJWTKey(user);
             logger.info("User {} authenticated successfully", username);
             return jwtToken;
@@ -57,12 +46,6 @@ public class LoginService {
         }
     }
 
-    /**
-     * Удалить пользователя из Redis (логаут).
-     *
-     * @param username Имя пользователя.
-     * @return true, если пользователь удален, иначе false.
-     */
     public boolean logoutUser(String username) {
         logger.debug("Attempting to logout user: {}", username);
         boolean isDeleted = userLoginRepository.deleteUserFromRedis(username);
@@ -76,12 +59,6 @@ public class LoginService {
         return isDeleted;
     }
 
-    /**
-     * Получить JWT-токен пользователя из Redis.
-     *
-     * @param username Имя пользователя.
-     * @return JWT-токен, если пользователь найден, иначе null.
-     */
     public String getUserToken(String username) {
         logger.debug("Attempting to get token for user: {}", username);
         String token = userLoginRepository.getTokenFromRedis(username);
@@ -95,11 +72,6 @@ public class LoginService {
         return token;
     }
 
-    /**
-     * Обновить данные пользователя в Redis.
-     *
-     * @param user Пользователь.
-     */
     public void updateUserInRedis(User user) {
         logger.debug("Attempting to update user in Redis: {}", user.getUsername());
         userLoginRepository.updateUserInRedis(user, passwordEncoder);

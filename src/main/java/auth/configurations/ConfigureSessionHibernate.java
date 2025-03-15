@@ -32,10 +32,10 @@ public class ConfigureSessionHibernate {
                 .build();
 
         return new MetadataSources(registry)
-                .addAnnotatedClass(User.class) // Регистрируем сущность User
-                .addAnnotatedClass(AuthProvider.class) // Регистрируем сущность AuthProvider
-                .addAnnotatedClass(Role.class) // Регистрируем сущность Role
-                .addAnnotatedClass(UserOAuth.class) // Регистрируем сущность UserOAuth
+                .addAnnotatedClass(User.class)
+                .addAnnotatedClass(AuthProvider.class)
+                .addAnnotatedClass(Role.class)
+                .addAnnotatedClass(UserOAuth.class)
                 .buildMetadata()
                 .getSessionFactoryBuilder()
                 .build();

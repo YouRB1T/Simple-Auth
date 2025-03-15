@@ -102,24 +102,24 @@ public class UserDAO extends SimpleDAO<User>{
         }
     }
 
-    public Optional<User> findByUsernameOrEmail(String email, String number) {
+    public Optional<User> findByUsernameOrEmail(String username, String email) {
         Session session = ConfigureSessionHibernate.getSession();
         try {
-            logger.debug("Attempting to find user by email: {} or number: {}", email, number);
+            logger.debug("Attempting to find user by email: {} or username: {}", email, username);
 
             Query<User> queryEmail = session.createQuery(
                     "FROM User WHERE email = :email", User.class);
             queryEmail.setParameter("email", email);
             Optional<User> userByEmail = queryEmail.uniqueResultOptional();
 
-            Query<User> queryNumber = session.createQuery(
-                    "FROM User WHERE number = :number", User.class);
-            queryNumber.setParameter("number", number);
-            Optional<User> userByNumber = queryNumber.uniqueResultOptional();
+            Query<User> queryUsername = session.createQuery(
+                    "FROM User WHERE username = :username", User.class);
+            queryUsername.setParameter("username", username);
+            Optional<User> userByNumber = queryUsername.uniqueResultOptional();
 
             if (userByEmail.isPresent() && userByNumber.isPresent()) {
                 if (!userByEmail.get().getIdUser().equals(userByNumber.get().getIdUser())) {
-                    logger.error("Email and number belong to different users. Email: {}, Number: {}", email, number);
+                    logger.error("Email and number belong to different users. Email: {}, Username: {}", email, username);
                     throw new IllegalStateException("Email и номер принадлежат разным пользователям");
                 }
                 logger.info("User found by email: {}", userByEmail.get().getUsername());
@@ -128,18 +128,18 @@ public class UserDAO extends SimpleDAO<User>{
                 logger.info("User found by email: {}", userByEmail.get().getUsername());
                 return userByEmail;
             } else if (userByNumber.isPresent()) {
-                logger.info("User found by number: {}", userByNumber.get().getUsername());
+                logger.info("User found by username: {}", userByNumber.get().getUsername());
                 return userByNumber;
             } else {
-                logger.warn("No user found with email: {} or number: {}", email, number);
+                logger.warn("No user found with email: {} or username: {}", email, username);
                 return Optional.empty();
             }
         } catch (Exception e) {
-            logger.error("Error finding user by email {} or number {}: {}", email, number, e.getMessage(), e);
+            logger.error("Error finding user by email {} or username {}: {}", email, username, e.getMessage(), e);
             throw e;
         } finally {
             session.close();
-            logger.debug("Session closed after findByUsernameOrEmail operation for email: {} and number: {}", email, number);
+            logger.debug("Session closed after findByUsernameOrEmail operation for email: {} and username: {}", email, username);
         }
     }
 

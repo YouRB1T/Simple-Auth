@@ -15,12 +15,6 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    /**
-     * Регистрация локального пользователя.
-     *
-     * @param userDTO Данные пользователя.
-     * @return Сообщение об успешной регистрации или ошибке.
-     */
     @PostMapping("/local")
     public ResponseEntity<String> registerLocalUser(@RequestBody LocalUserRegistrationDTO userDTO) {
         try {
@@ -31,12 +25,6 @@ public class RegisterController {
         }
     }
 
-    /**
-     * Регистрация пользователя через OAuth.
-     *
-     * @param userDTO Данные пользователя.
-     * @return Сообщение об успешной регистрации или ошибке.
-     */
     @PostMapping("/oauth")
     public ResponseEntity<String> registerOAuthUser(@RequestBody OAuthUserRegistrationDTO userDTO) {
         try {

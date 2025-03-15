@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +46,7 @@ public class UserRedisRepository {
         logger.info("User {} added successfully to Redis with token expiration set to 1 day", user.getUsername());
     }
 
+    @Transactional
     public String findTokenByUsername(String userName) {
         String key = REDIS_KEY_PREFIX + userName;
         logger.debug("Attempting to find token for user: {}", userName);
