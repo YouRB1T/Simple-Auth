@@ -1,10 +1,11 @@
 # 🔐 Сервис аутентификации пользователей
 
 [![Java](https://img.shields.io/badge/Java-17-blue.svg)](https://www.oracle.com/java/)
-[![Spring](https://img.shields.io/badge/Spring-6.x-green.svg)](https://spring.io/)
-[![Hibernate](https://img.shields.io/badge/Hibernate-6.x-blue.svg)](https://hibernate.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.0-green.svg)](https://spring.io/)
+[![Hibernate](https://img.shields.io/badge/Hibernate-6.2.0.Final-blue.svg)](https://hibernate.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-42.7.2-blue.svg)](https://www.postgresql.org/)
 [![Redis](https://img.shields.io/badge/Redis-7.x-red.svg)](https://redis.io/)
+[![JWT](https://img.shields.io/badge/JWT-0.11.2-yellow.svg)](https://jwt.io/)
 
 **Сервис аутентификации пользователей** — это приложение для управления пользователями и их аутентификацией с использованием JWT (JSON Web Tokens). Проект реализован на Java 17 с использованием Spring Boot, Hibernate, PostgreSQL и Redis.
 
@@ -25,11 +26,11 @@
 ## 🛠️ Стек технологий
 
 - **Язык программирования**: Java 17
-- **Фреймворк**: Spring Boot 3.x
-- **ORM**: Hibernate 6.x
-- **База данных**: PostgreSQL 15
+- **Фреймворк**: Spring Boot 3.2.0
+- **ORM**: Hibernate 6.2.0.Final
+- **База данных**: PostgreSQL 42.7.2
 - **Кэширование**: Redis 7.x
-- **Библиотека для JWT**: jjwt
+- **Библиотека для JWT**: jjwt 0.11.2
 - **Сборка**: Gradle
 
 ---
